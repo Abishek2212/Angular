@@ -1,0 +1,265 @@
+<style>
+    form {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type="file"] {
+        margin-top: 5px;
+    }
+
+    button {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+    table {
+    border-radius: 8px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: 50px;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f17742;
+        color: white;
+    }
+
+    .viewdetails {
+        margin-left: 400px;
+    }
+
+    .clientvalidation {
+        color: #cf1f12;
+    }
+    .success{
+            color: blue;
+    }
+    .error{
+            color: #cf1f12;
+    }
+</style>
+
+<form *ngIf="!update" [formGroup]="candidateForm" (ngSubmit)="onSubmit()">
+    <label for="candidateName">Candidate Name</label>
+    <input type="text" id="candidateName" formControlName="candidateName" required>
+    <div class="clientvalidation" *ngIf="CandidateNameControl.hasError('required') && CandidateNameControl.touched">
+        CandidateName is required.
+    </div>
+    <div class="clientvalidation" *ngIf="CandidateNameControl.hasError('pattern') && CandidateNameControl.touched">
+        CandidateName is required.
+    </div>
+
+    <label for="contactNumber">Contact Number</label>
+    <input type="tel" id="contactNumber" formControlName="contactNumber" pattern="[0-9]{10}" required>
+    <div class="clientvalidation" *ngIf="CandidatecontactControl.hasError('required') && CandidatecontactControl.touched">
+        Candidate Contact is required.
+    </div>
+    <div class="clientvalidation" *ngIf="CandidatecontactControl.hasError('pattern') && CandidatecontactControl.touched">
+        Contact Number must be 10-digits.
+    </div>
+    <label for="email">Email</label>
+    <input type="email" id="email" formControlName="email" required>
+    <div class="clientvalidation" *ngIf="CandidateemailControl.hasError('required') && CandidateemailControl.touched">
+        Candidate Email is required.
+    </div>
+    <div class="clientvalidation" *ngIf="CandidateemailControl.hasError('pattern') && CandidateemailControl.touched">
+        Candidate Email is required.
+    </div>
+    <label for="isInternal">Is Internal?</label>
+    <select id="isInternal" formControlName="isInternal">
+        <option value="True">Yes</option>
+        <option value="False">No</option>
+    </select>
+
+    <label for="resume">Resume (PDF or DOCX)</label>
+    <input type="file" id="resume" formControlName="resume" accept=".pdf, .docx" required>
+    <div class="clientvalidation" *ngIf="CandidatresumeControl.hasError('required') && CandidatresumeControl.touched">
+        resume is required.
+    </div>
+    <div class="clientvalidation" *ngIf="CandidatresumeControl.hasError('pattern') && CandidatresumeControl.touched">
+        resume is required.
+    </div>
+    <label for="experience">Years of Experience</label>
+    <input type="number" id="experience" formControlName="experience" required>
+    <div class="clientvalidation" *ngIf="CandidateexperienceControl.hasError('required') && CandidateexperienceControl.touched">
+        Experience is required.
+    </div>
+    <div class="clientvalidation" *ngIf="CandidateexperienceControl.hasError('pattern') && CandidateexperienceControl.touched">
+        Experience is required.
+    </div>
+    <label for="skills">Primary Skills</label>
+    <input type="text" id="skills" formControlName="skills" required>
+    <div class="clientvalidation" *ngIf="CandidateskillsControl.hasError('required') && CandidateskillsControl.touched">
+        Skill is required.
+    </div>
+    <div class="clientvalidation" *ngIf="CandidateskillsControl.hasError('pattern') && CandidateskillsControl.touched">
+        Skill is required.
+    </div>
+    <label for="position">Assigned Position</label>
+    <select id="position" formControlName="position" required>
+        <option *ngFor="let position of positiondatas" [value]="position.positionId">{{position.Position_Name}}</option>
+    </select>
+    <div class="clientvalidation" *ngIf="CandidatepositionControl.hasError('required') && CandidatepositionControl.touched">
+        position is required.
+    </div>
+    <div class="clientvalidation" *ngIf="CandidatepositionControl.hasError('pattern') && CandidatepositionControl.touched">
+        position is required.
+    </div>
+    <button type="submit">Submit</button>
+    <div class="error"> {{this.deletedmessage}}</div>
+    <div class="success">{{this.createmessage}}</div>
+</form>
+
+<form *ngIf="update" [formGroup]="updatecandidateForm" (ngSubmit)="updatereg()">
+    <label for="candidateName">Candidate Name</label>
+    <input type="text" id="candidateName" formControlName="candidateName" required>
+    <div class="clientvalidation" *ngIf="updateCandidateNameControl.hasError('required') && updateCandidateNameControl.touched">
+        CandidateName is required.
+    </div>
+    <div class="clientvalidation" *ngIf="updateCandidateNameControl.hasError('pattern') && updateCandidateNameControl.touched">
+        CandidateName is required.
+    </div>
+
+    <label for="contactNumber">Contact Number</label>
+    <input type="tel" id="contactNumber" formControlName="contactNumber" pattern="[0-9]{10}" required>
+    <div class="clientvalidation"
+        *ngIf="updateCandidatecontactControl.hasError('required') && updateCandidatecontactControl.touched">
+        Candidate Contact is required.
+    </div>
+    <div class="clientvalidation"
+        *ngIf="updateCandidatecontactControl.hasError('pattern') && updateCandidatecontactControl.touched">
+        Contact Number must be 10-digits.
+    </div>
+    <label for="email">Email</label>
+    <input type="email" id="email" formControlName="email" required>
+    <div class="clientvalidation" *ngIf="updateCandidateemailControl.hasError('required') && updateCandidateemailControl.touched">
+        Candidate Email is required.
+    </div>
+    <div class="clientvalidation" *ngIf="updateCandidateemailControl.hasError('pattern') && updateCandidateemailControl.touched">
+        Candidate Email is required.
+    </div>
+    <label for="isInternal">Is Internal?</label>
+    <select id="isInternal" formControlName="isInternal">
+        <option value="True">Yes</option>
+        <option value="False">No</option>
+    </select>
+
+    <label for="resume">Resume (PDF or DOCX)</label>
+    <input type="file" id="resume" formControlName="resume" accept=".pdf, .docx" required>
+    <div class="clientvalidation" *ngIf="updateCandidatresumeControl.hasError('required') && updateCandidatresumeControl.touched">
+        resume is required.
+    </div>
+    <div class="clientvalidation" *ngIf="updateCandidatresumeControl.hasError('pattern') && updateCandidatresumeControl.touched">
+        resume is required.
+    </div>
+    <label for="experience">Years of Experience</label>
+    <input type="number" id="experience" formControlName="experience" required>
+    <div class="clientvalidation"
+        *ngIf="updateCandidateexperienceControl.hasError('required') && updateCandidateexperienceControl.touched">
+        Experience is required.
+    </div>
+    <div class="clientvalidation"
+        *ngIf="updateCandidateexperienceControl.hasError('pattern') && updateCandidateexperienceControl.touched">
+        Experience is required.
+    </div>
+    <label for="skills">Primary Skills</label>
+    <input type="text" id="skills" formControlName="skills" required>
+    <div class="clientvalidation" *ngIf="updateCandidateskillsControl.hasError('required') && updateCandidateskillsControl.touched">
+        Skill is required.
+    </div>
+    <div class="clientvalidation" *ngIf="updateCandidateskillsControl.hasError('pattern') && updateCandidateskillsControl.touched">
+        Skill is required.
+    </div>
+    <label for="position">Assigned Position</label>
+    <select id="position" formControlName="position" required>
+
+        <option *ngFor="let position of positiondatas" [value]="position.positionId">{{position.Position_Name}}</option>
+    </select>
+    <div class="clientvalidation"
+        *ngIf="updateCandidatepositionControl.hasError('required') && updateCandidatepositionControl.touched">
+        position is required.
+    </div>
+    <div class="clientvalidation"
+        *ngIf="updateCandidatepositionControl.hasError('pattern') && updateCandidatepositionControl.touched">
+        position is required.
+    </div>
+    <button type="submit">update</button>
+    <button (click)="cancelupdate()">Cancel</button>
+    <div class="error"> {{this.deletedmessage}}</div>
+    <div class="success">{{this.createmessage}}</div>
+</form>
+
+<div class="details">
+    <h3 class="viewdetails">Position Details</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>SNO</th>
+                <th>CandidateId</th>
+                <th>Fullname</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>IsInternal</th>
+                <th>FileName</th>
+                <th>YearsOfExp</th>
+                <th>Skills</th>
+                <th>Position Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of datas; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ data.CandidateId }}</td>
+                <td>{{ data.Fullname }}</td>
+                <td>{{ data.Contact }}</td>
+                <td>{{ data.Email }}</td>
+                <td>{{ data.IsInternal }}</td>
+                <td>{{ data.FileName }}</td>
+                <td>{{ data.YearsOfExp }}</td>
+                <td>{{ data.Skills }}</td>
+                <td>{{ data.Position_Name }}</td>
+                <td class="center"><button class="btn btn-primary" (click)="updatedata(data.CandidateId,data.Fullname,data.Contact,data.Email,data.IsInternal,data.FileName,data.YearsOfExp,data.Skills,data.PositionId)">Edit</button></td>
+                <td class="center"><button class="btn btn-danger"
+                        (click)="deletecandidate(data.CandidateId)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

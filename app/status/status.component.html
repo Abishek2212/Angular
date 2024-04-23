@@ -1,0 +1,129 @@
+<style>
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .select {
+        width: 10%;
+        padding: 10px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        margin-left: 30px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type="file"] {
+        margin-top: 5px;
+    }
+
+    button {
+        background-color: #4caf50;
+        color: #fff;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+    table {
+    border-radius: 8px;
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-left: 30px;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f17742;
+        color: white;
+    }
+
+    .viewdetails {
+        margin-left: 400px;
+    }
+
+</style>
+
+<select class="select" id="position" (change)="onPositionChange($event)" required>
+    <option value="" disabled selected>Select</option>
+    <option *ngFor="let position of positiondatas" [value]="position.positionId">{{position.Position_Name}}</option>
+</select>
+
+
+<div *ngIf="update" class="details">
+     <table>
+        <thead>
+            <tr>
+                <th>CandidateId</th>
+                <th>CandidateName</th>
+                <th>InterviewRounds</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of Names let i = index">
+                <td>{{ data.CandidateId }}</td>
+                <td>{{ data.Fullname }}</td>
+                <td><select id="Round" [(ngModel)]="selectedRound[i]" required>
+                    
+                    <option *ngFor="let Round of Rounds" [value]="Round.InterviewId">{{Round.InterviewName}}</option>
+                    </select>
+                </td>
+                <td><select id="Select" [(ngModel)]="selectedStatus[i]" required>
+                    <option *ngFor="let status of ShowStatus" [value]="status.StatusId">{{status.Statusname}}</option>
+                    </select>
+                </td>
+                <td class="center"><button class="btn btn-primary" (click)="submit(data.CandidateId,data.Fullname,selectedRound[i],selectedStatus[i])">Submit</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="details">
+     <table>
+        <thead>
+            <tr>
+                <th>SNO</th>
+                <th>Id</th>
+                <th>PositionName</th>
+                <th>InterviewStepName</th>
+                <th>Fullname</th>
+                <th>StatusName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of datas; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ data.Id }}</td>
+                <td>{{ data.Position_Name }}</td>
+                <td>{{ data.InterviewName }}</td>
+                <td>{{ data.Fullname }}</td>
+                <td>{{ data.Statusname }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

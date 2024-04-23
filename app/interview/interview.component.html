@@ -1,0 +1,143 @@
+<style>
+    form {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+    }
+
+    button {
+        background-color: #4caf50;
+        color: white;
+        padding: 8px 17px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    .Delete {
+        background-color: #cf1f12;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px;
+    }
+
+    table {
+        border-radius: 8px;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        margin-left: 200px;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f17742;
+        color: white;
+    }
+
+    .viewdetails{
+        margin-left: 450px;
+    }
+    .success{
+        color: blue;
+    }
+    .error{
+        color: #cf1f12;
+    }
+    .clientvalidation{
+        color: #cf1f12;
+    }
+
+</style>
+
+
+<div class="container">
+    <form *ngIf="update" [formGroup]="interviewForm" (submit)="createInterview()">
+        <label for="interviewStepName">Interview Step Name</label>
+        <input type="text" id="interviewStepName" name="interviewStepName" formControlName="interviewStepName">
+        <div class="clientvalidation" *ngIf="interviewStepNameControl.hasError('required') && interviewStepNameControl.touched">
+            Interview Step Name is required.
+        </div>
+        <div class="clientvalidation" *ngIf="interviewStepNameControl.hasError('pattern') && interviewStepNameControl.touched">
+            Interview Step Name is required.
+        </div>
+        <button type="submit" [disabled]="interviewForm.invalid">Create</button>
+        <div class='success'>
+            {{createmessage}}
+            {{updatemaessage}}
+        </div>
+        <div class="error">
+            {{deletedmessage}}</div>
+    </form>
+
+    <form *ngIf="!update" [formGroup]="updateForm" (submit)="updateInterview()">
+        <label for="interviewStepName">Interview Step Name</label>
+        <input type="text" id="interviewStepName" name="interviewStepName" formControlName="interviewStepName" />
+        <div class="clientvalidation" *ngIf="updateStepNameControl.hasError('required') && updateStepNameControl.touched">
+            Interview Step Name is required.
+        </div>
+        <div class="clientvalidation" *ngIf="updateStepNameControl.hasError('pattern') && updateStepNameControl.touched">
+            Interview Step Name is required.
+        </div>
+        <button type="submit" [disabled]="updateForm.invalid">Update</button>
+
+        <button (click)="cancelupdate()">Cancel</button>
+    </form>
+    <br />
+</div>
+
+<div class="container">
+    <div class="details">
+
+        <h3 class="viewdetails">View Details</h3>
+        <table *ngIf=" datas">
+            <thead>
+                <tr>
+                    <th>SNO</th>
+                    <th>Interview StepID</th>
+                    <th>Interview StepName</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of datas; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ data.InterviewId }}</td>
+                    <td>{{ data.InterviewName }}</td>
+                    <td class="center"><button class="btn btn-primary"
+                            (click)="updatedata(data.InterviewId, data.InterviewName)">Edit</button></td>
+                    <td class="center"><button class="btn btn-danger"
+                            (click)="deleteInterview(data.InterviewId)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

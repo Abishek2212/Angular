@@ -1,0 +1,180 @@
+<style>
+  form {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+  }
+
+  .checkbox-group label {
+    margin-right: 20px;
+  }
+
+  button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  table {
+    border-radius: 8px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: 50px;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f17742;
+    color: white;
+  }
+
+  .viewdetails {
+    margin-left: 400px;
+  }
+
+  .clientvalidation {
+    color: #cf1f12;
+  }
+  .success{
+        color: blue;
+  }
+  .error{
+        color: #cf1f12;
+  }
+
+</style>
+<form *ngIf="update" [formGroup]="positionForm" (ngSubmit)="submitForm()">
+  <label for="positionName">Position Name:</label>
+  <input type="text" id="positionName" name="positionName" formControlName="positionName">
+  <div class="clientvalidation" *ngIf="PositionNameControl.hasError('required') && PositionNameControl.touched">
+      Position Name is required.
+  </div>
+  <div class="clientvalidation" *ngIf="PositionNameControl.hasError('pattern') && PositionNameControl.touched">
+      Position Name is required.
+  </div>
+  <label for="positionDescription">Position Description:</label>
+  <textarea id="positionDescription" name="positionDescription" rows="2" formControlName="positionDescription"></textarea>
+  <div class="clientvalidation"
+      *ngIf="positionDescriptionControl.hasError('required') && positionDescriptionControl.touched">
+      Position Description is required.
+  </div>
+  <div class="clientvalidation"
+      *ngIf="positionDescriptionControl.hasError('pattern') && positionDescriptionControl.touched">
+      Position Description is required.
+  </div>
+  <label>Interview Stages:</label><br>
+  <div class="checkbox-group">
+  <div *ngFor="let stage of obj; let i = index">
+  <label>
+  <input type="checkbox" formArrayName="interviewStages" [value]="stage.InterviewId" (change)="updateInterviewStages($event,i)" >
+          {{ stage.InterviewName }}
+  </label>
+  </div>
+  </div>
+  <button type="submit" [disabled]="positionForm.invalid">Submit</button>
+  <div class='success'>
+      {{createmessage}}
+      {{updatemaessage}}
+  </div>
+  <div class="error">
+      {{deletedmessage}}
+  </div>
+  </form>
+
+<form  *ngIf="!update" [formGroup]="updateForm" (ngSubmit)="updateposition()">
+  <label for="positionName">Position Name:</label>
+  <input type="text" id="positionName" name="positionName" formControlName="positionName">
+  <div class="clientvalidation" *ngIf="updatePositionNameControl.hasError('required') && updatePositionNameControl.touched">
+    Position Name is required.
+  </div>
+  <div class="clientvalidation" *ngIf="updatePositionNameControl.hasError('pattern') && updatePositionNameControl.touched">
+    Position Name is required.
+  </div>
+  <label for="positionDescription">Position Description:</label>
+  <textarea id="positionDescription" name="positionDescription" rows="2"
+    formControlName="positionDescription"></textarea>
+  <div class="clientvalidation"
+    *ngIf="updatepositionDescriptionControl.hasError('required') && updatepositionDescriptionControl.touched">
+    Position Description is required.
+  </div>
+  <div class="clientvalidation"
+    *ngIf="updatepositionDescriptionControl.hasError('pattern') && updatepositionDescriptionControl.touched">
+    Position Description is required.
+  </div>
+  <label>Interview Stages:</label><br>
+  <div class="checkbox-group">
+    <div *ngFor="let stage of obj; let i = index">
+    <label>
+    <input type="checkbox" formArrayName="interviewStages" [value]="stage.InterviewId" (change)="updateInterviewStages($event,i)" >
+            {{ stage.InterviewName }}
+    </label>
+    </div>
+    </div>
+  <button type="submit"
+    [disabled]="updateForm.invalid">update</button>
+    <button (click)="cancelupdate()">Cancel</button>
+</form>
+
+
+<div class="container">
+  <div class="details">
+    <h3 class="viewdetails">Position Details</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>SNO</th>
+          <th>Position StepID</th>
+          <th>Position Name</th>
+          <th>Position desc</th>
+          <th>interviewStage</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of datas; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ data.positionId }}</td>
+          <td>{{ data.Position_Name }}</td>
+          <td>{{ data.Position_Description }}</td>
+          <td>{{ data.InterviewStage }}</td>
+          <td class="center"><button class="btn btn-primary"
+              (click)="updatedata(data.positionId, data.Position_Name,data.Position_Description)">Edit</button></td>
+          <td class="center"><button class="btn btn-danger" (click)="deleteposition(data.positionId)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
